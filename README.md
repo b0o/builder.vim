@@ -22,8 +22,9 @@ Coming soon.
 
 Coming soon.
 
-For now, reference the source files inside [`pb.vim`](./autoload/pb.vim) for Pattern Builder documentation
-and [`sb.vim`](./autoload/sb.vim) for Syntax Builder documentation.
+For now, reference the commented source files:
+- [`pb.vim`](./autoload/pb.vim) for Pattern Builder documentation
+- [`sb.vim`](./autoload/sb.vim) for Syntax Builder documentation
 
 ### License
 
