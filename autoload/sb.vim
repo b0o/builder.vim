@@ -74,23 +74,14 @@ func! g:sb#new(prefix)
     return self.push(obj)
   endfunc
 
-  " A disabled match
-  " Useful for disabling a match
-  " call during development
+  " Disabled groups
+  " Useful for disabling a syntax group during development
   func! this.xmatch(...)
     return self
   endfunc
-
-  " A disabled keyword
-  " Useful for disabling a keyword
-  " call during development
   func! this.xkeyword(...)
     return self
   endfunc
-
-  " A disabled region
-  " Useful for disabling a region
-  " call during development
   func! this.xregion(...)
     return self
   endfunc
