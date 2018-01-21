@@ -12,6 +12,12 @@ func! g:sb#new(prefix)
   " Object which holds all syntax definitions
   let this.objs = []
 
+  " ref takes a non-prefixed name and returns the
+  " full version
+  func! this.ref(name)
+    return self.prefix . a:name
+  endfunc
+
   " Push a new obj onto the list of objs
   func! this.push(...)
     call extend(self.objs, a:000)
@@ -29,21 +35,63 @@ func! g:sb#new(prefix)
   " Builds a 'syntax match ...' command
   func! this.match(name, pat, ...)
     let obj = {
-      \ 'name': self.prefix . a:name,
+      \ 'name': self.ref(a:name),
       \ 'pat':  a:pat,
       \ 'opts': a:000,
-      \ 'cmd':  join(
-        \ ['syn match', self.prefix . a:name, a:pat, join(a:000, ' ')],
-        \ ' '
-      \ )
     \ }
+    let obj.cmd = join(
+      \ ['syn match', obj.name, obj.pat, join(obj.opts, ' ')],
+      \ ' '
+    \ )
+    return self.push(obj)
+  endfunc
+
+  " Builds a 'syntax keyword ...' command
+  func! this.keyword(name, ...)
+    let obj = {
+      \ 'name': self.ref(a:name),
+      \ 'opts': a:000,
+    \ }
+    let obj.cmd = join(
+      \ ['syn keyword', obj.name, join(obj.opts, ' ')],
+      \ ' '
+    \ )
+    return self.push(obj)
+  endfunc
+
+  " Builds a 'syntax region ...' command
+  func! this.region(name, start, end, ...)
+    let obj = {
+      \ 'name': self.ref(a:name),
+      \ 'start': a:start,
+      \ 'end':   a:end,
+      \ 'opts':  a:000,
+    \ }
+    let obj.cmd = join(
+      \ ['syn region', obj.name, 'start=' . obj.start, 'end=' . obj.end, join(obj.opts, ' ')],
+      \ ' '
+    \ )
     return self.push(obj)
   endfunc
 
   " A disabled match
   " Useful for disabling a match
-  " statement during development
+  " call during development
   func! this.xmatch(...)
+    return self
+  endfunc
+
+  " A disabled keyword
+  " Useful for disabling a keyword
+  " call during development
+  func! this.xkeyword(...)
+    return self
+  endfunc
+
+  " A disabled region
+  " Useful for disabling a region
+  " call during development
+  func! this.xregion(...)
     return self
   endfunc
 
