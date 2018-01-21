@@ -1,8 +1,8 @@
-# builder.vim :construction_worker::hammer:
+# builder.vim :hammer::construction_worker:
 ### A VimL DSL for building Patterns and Syntax Rules
 ##### :warning: :construction: This plugin is a work in progress and its API is highly volatile :construction: :warning:
 
-builder.vim provides a domain-specific language (DSL) designed to make it
+`builder.vim` provides a domain-specific language (DSL) designed to make it
 easier to create complex patterns and syntax highlighting rules in VimL.
 
 This is not an end-user plugin, but rather a library for use in Vim scripts and plugins.
@@ -22,8 +22,8 @@ Coming soon.
 
 Coming soon.
 
-For now, reference the source files inside [`pb.vim`](./blob/master/autoload/pb.vim) for Pattern Builder documentation
-and [`sb.vim`](./blob/master/autoload/sb.vim) for Syntax Builder documentation.
+For now, reference the source files inside [`pb.vim`](./autoload/pb.vim) for Pattern Builder documentation
+and [`sb.vim`](./autoload/sb.vim) for Syntax Builder documentation.
 
 ### License
 
