@@ -15,7 +15,13 @@ func! g:sb#new(prefix)
   " ref takes a non-prefixed name and returns the
   " full version
   func! this.ref(name)
-    return self.prefix . a:name
+    let prefix = ''
+    let ref = a:name
+    if ref[0] == '@'
+      let prefix = '@'
+      let ref = ref[1:]
+    endif
+    return prefix . self.prefix . ref
   endfunc
 
   " Push a new obj onto the list of objs
@@ -65,10 +71,24 @@ func! g:sb#new(prefix)
       \ 'name': self.ref(a:name),
       \ 'start': a:start,
       \ 'end':   a:end,
-      \ 'opts':  a:000,
+      \ 'opts':  a:000
     \ }
     let obj.cmd = join(
       \ ['syn region', obj.name, 'start=' . obj.start, 'end=' . obj.end, join(obj.opts, ' ')],
+      \ ' '
+    \ )
+    return self.push(obj)
+  endfunc
+
+  " Builds a 'syntax cluster ...' command
+  func! this.cluster(name, children, ...)
+    let obj = {
+      \ 'name': self.ref(a:name),
+      \ 'children': map(copy(a:children), { i, c -> self.ref(c) }),
+      \ 'opts':  a:000
+    \ }
+    let obj.cmd = join(
+      \ ['syn cluster', obj.name, 'contains=' . join(obj.children, ','), join(obj.opts, ' ')],
       \ ' '
     \ )
     return self.push(obj)
