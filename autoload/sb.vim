@@ -80,7 +80,7 @@ func! g:sb#new(prefix)
     return self.push(obj)
   endfunc
 
-  " Builds a 'syntax cluster ...' command
+  " Builds a 'syntax cluster contains=...' command
   func! this.cluster(name, children, ...)
     let obj = {
       \ 'name': self.ref(a:name),
@@ -94,6 +94,48 @@ func! g:sb#new(prefix)
     return self.push(obj)
   endfunc
 
+  " Builds a 'syntax cluster add=...' command
+  func! this.clusteradd(name, add, ...)
+    let obj = {
+      \ 'name': self.ref(a:name),
+      \ 'add': map(copy(a:add), { i, c -> self.ref(c) }),
+      \ 'opts':  a:000
+    \ }
+    let obj.cmd = join(
+      \ ['syn cluster', obj.name, 'add=' . join(obj.add, ','), join(obj.opts, ' ')],
+      \ ' '
+    \ )
+    return self.push(obj)
+  endfunc
+
+  " Builds a 'hi def link ...' command
+  func! this.hi(from, to)
+    let obj = {
+      \ 'from': self.ref(a:from),
+      \ 'to':   a:to,
+    \ }
+    let obj.cmd = join(['hi def link', obj.from, obj.to], ' ')
+    return self.push(obj)
+  endfunc
+
+  func! this.next(...)
+    let groups = map(copy(a:000), { i, g -> self.ref(g) })
+    return 'nextgroup=' . join(groups, ',')
+  endfunc
+
+  func! this.contained(...)
+    if len(a:000) == 0
+      return 'contained'
+    endif
+    let groups = map(copy(a:000), { i, g -> self.ref(g) })
+    return 'containedin=' . join(groups, ',')
+  endfunc
+
+  func! this.contains(...)
+    let groups = map(copy(a:000), { i, g -> self.ref(g) })
+    return 'contains=' . join(groups, ',')
+  endfunc
+
   " Disabled groups
   " Useful for disabling a syntax group during development
   func! this.xmatch(...)
@@ -104,6 +146,15 @@ func! g:sb#new(prefix)
   endfunc
   func! this.xregion(...)
     return self
+  endfunc
+  func! this.xnext(...)
+    return ''
+  endfunc
+  func! this.xcontained(...)
+    return ''
+  endfunc
+  func! this.xcontains(...)
+    return ''
   endfunc
 
   return this
