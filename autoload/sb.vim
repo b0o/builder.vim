@@ -17,6 +17,15 @@ func! g:sb#new(prefix)
   func! this.ref(name)
     let prefix = ''
     let ref = a:name
+    " Note: the Vim documentation specifies that certain group names
+    " are special, but only if they are the first in the group list.
+    " This is not taken into account here.
+    if index(["ALL", "ALLBUT", "TOP", "CONTAINED"], ref) != -1
+      return ref
+    endif
+    if ref[0] == '!'
+      return ref[1:]
+    endif
     if ref[0] == '@'
       let prefix = '@'
       let ref = ref[1:]
@@ -123,12 +132,25 @@ func! g:sb#new(prefix)
     return 'nextgroup=' . join(groups, ',')
   endfunc
 
+  func! this.lcontained(refs)
+    if len(a:refs) == 0
+      return 'contained'
+    endif
+    let groups = map(copy(a:refs), { i, g -> self.ref(g) })
+    return 'containedin=' . join(groups, ',')
+  endfunc
+
   func! this.contained(...)
     if len(a:000) == 0
       return 'contained'
     endif
     let groups = map(copy(a:000), { i, g -> self.ref(g) })
     return 'containedin=' . join(groups, ',')
+  endfunc
+
+  func! this.lcontains(refs)
+    let groups = map(copy(a:refs), { i, g -> self.ref(g) })
+    return 'contains=' . join(groups, ',')
   endfunc
 
   func! this.contains(...)
@@ -150,7 +172,13 @@ func! g:sb#new(prefix)
   func! this.xnext(...)
     return ''
   endfunc
+  func! this.xlcontained(...)
+    return ''
+  endfunc
   func! this.xcontained(...)
+    return ''
+  endfunc
+  func! this.xlcontains(...)
     return ''
   endfunc
   func! this.xcontains(...)
