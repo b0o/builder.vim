@@ -60,6 +60,9 @@ func! g:sb#new(prefix)
     \ )
     return self.push(obj)
   endfunc
+  func! this.xmatch(...)
+    return self
+  endfunc
 
   " Builds a 'syntax keyword ...' command
   func! this.keyword(name, ...)
@@ -72,6 +75,9 @@ func! g:sb#new(prefix)
       \ ' '
     \ )
     return self.push(obj)
+  endfunc
+  func! this.xkeyword(...)
+    return self
   endfunc
 
   " Builds a 'syntax region ...' command
@@ -88,6 +94,9 @@ func! g:sb#new(prefix)
     \ )
     return self.push(obj)
   endfunc
+  func! this.xregion(...)
+    return self
+  endfunc
 
   " Builds a 'syntax cluster contains=...' command
   func! this.cluster(name, children, ...)
@@ -101,6 +110,9 @@ func! g:sb#new(prefix)
       \ ' '
     \ )
     return self.push(obj)
+  endfunc
+  func! this.xcluster(...)
+    return self
   endfunc
 
   " Builds a 'syntax cluster add=...' command
@@ -116,6 +128,9 @@ func! g:sb#new(prefix)
     \ )
     return self.push(obj)
   endfunc
+  func! this.xclusteradd(...)
+    return self
+  endfunc
 
   " Builds a 'hi def link ...' command
   func! this.hi(from, to)
@@ -126,10 +141,16 @@ func! g:sb#new(prefix)
     let obj.cmd = join(['hi def link', obj.from, obj.to], ' ')
     return self.push(obj)
   endfunc
+  func! this.xhi(...)
+    return self
+  endfunc
 
   func! this.next(...)
     let groups = map(copy(a:000), { i, g -> self.ref(g) })
     return 'nextgroup=' . join(groups, ',')
+  endfunc
+  func! this.xnext(...)
+    return ''
   endfunc
 
   func! this.lcontained(refs)
@@ -137,7 +158,10 @@ func! g:sb#new(prefix)
       return 'contained'
     endif
     let groups = map(copy(a:refs), { i, g -> self.ref(g) })
-    return 'containedin=' . join(groups, ',')
+    return 'contained containedin=' . join(groups, ',')
+  endfunc
+  func! this.xlcontained(...)
+    return ''
   endfunc
 
   func! this.contained(...)
@@ -145,41 +169,23 @@ func! g:sb#new(prefix)
       return 'contained'
     endif
     let groups = map(copy(a:000), { i, g -> self.ref(g) })
-    return 'containedin=' . join(groups, ',')
+    return 'contained containedin=' . join(groups, ',')
+  endfunc
+  func! this.xcontained(...)
+    return ''
   endfunc
 
   func! this.lcontains(refs)
     let groups = map(copy(a:refs), { i, g -> self.ref(g) })
     return 'contains=' . join(groups, ',')
   endfunc
+  func! this.xlcontains(...)
+    return ''
+  endfunc
 
   func! this.contains(...)
     let groups = map(copy(a:000), { i, g -> self.ref(g) })
     return 'contains=' . join(groups, ',')
-  endfunc
-
-  " Disabled groups
-  " Useful for disabling a syntax group during development
-  func! this.xmatch(...)
-    return self
-  endfunc
-  func! this.xkeyword(...)
-    return self
-  endfunc
-  func! this.xregion(...)
-    return self
-  endfunc
-  func! this.xnext(...)
-    return ''
-  endfunc
-  func! this.xlcontained(...)
-    return ''
-  endfunc
-  func! this.xcontained(...)
-    return ''
-  endfunc
-  func! this.xlcontains(...)
-    return ''
   endfunc
   func! this.xcontains(...)
     return ''
