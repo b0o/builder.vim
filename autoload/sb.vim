@@ -47,6 +47,14 @@ func! g:sb#new(prefix)
     return self
   endfunc
 
+  " Dump all syntax commands in syns.objs
+  func! this.dump()
+    for obj in self.objs
+      echom obj.cmd
+    endfor
+    return self
+  endfunc
+
   " Builds a 'syntax match ...' command
   func! this.match(name, pat, ...)
     let obj = {
